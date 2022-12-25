@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/lstrihic/webapp/pkg/config"
+	"github.com/lstrihic/webapp/port/http"
 	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -31,11 +32,12 @@ var rootCMD = cobra.Command{
 	Use: "service",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fxApp := fx.New(
+			fx.NopLogger,
 			fx.Supply(&logger),
 			fx.Supply(&cfg),
-			fx.Invoke(func(log *zerolog.Logger) {
-				// TODO: ...
-				log.Info().Msg("TODO: implement")
+			http.Provider,
+			fx.Invoke(func(server http.Server) {
+				server.Start()
 			}),
 		)
 
