@@ -67,7 +67,7 @@ func makeCfg(config []Config) (cfg Config) {
 		cfg.ErrorHandler = func(c *fiber.Ctx, err error) error {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Error{
 				Code:    fiber.StatusUnauthorized,
-				Message: "failed to authorize user",
+				Message: "failed to authorize",
 			})
 		}
 	}
