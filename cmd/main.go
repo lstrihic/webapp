@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/lstrihic/webapp/adapter/db"
+	"github.com/lstrihic/webapp/domain"
 	"github.com/lstrihic/webapp/pkg/config"
 	"github.com/lstrihic/webapp/port/http"
 	"github.com/mitchellh/mapstructure"
@@ -29,15 +31,26 @@ var (
 )
 
 var rootCMD = cobra.Command{
-	Use: "service",
+	Use:     "webapp",
+	Short:   "Start web server",
+	Version: version,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fxApp := fx.New(
 			fx.NopLogger,
 			fx.Supply(&logger),
 			fx.Supply(&cfg),
+			db.Provider,
+			domain.Provider,
 			http.Provider,
-			fx.Invoke(func(server http.Server) {
-				server.Start()
+			fx.Invoke(func(db db.DB, server http.Server) error {
+				// migrate
+				err := db.Migrate(cmd.Context())
+				if err != nil {
+					return err
+				}
+
+				// start server
+				return server.Start()
 			}),
 		)
 
@@ -67,7 +80,7 @@ func init() {
 		With().
 		Caller().
 		Str("version", version).
-		Str("service_name", "service").
+		Str("service_name", "webapp").
 		Logger()
 
 	// initialize cobra
