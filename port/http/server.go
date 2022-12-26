@@ -8,12 +8,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/lstrihic/webapp/pkg/config"
+	"github.com/lstrihic/webapp/port/http/api"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
-)
-
-var Provider = fx.Module("api",
-	fx.Provide(InitServer),
 )
 
 type Server interface {
@@ -28,7 +25,7 @@ type server struct {
 }
 
 // InitServer initialize http server.
-func InitServer(lifecycle fx.Lifecycle, logger *zerolog.Logger, cfg *config.Config) Server {
+func InitServer(routes []api.Route, lifecycle fx.Lifecycle, logger *zerolog.Logger, cfg *config.Config) Server {
 	app := fiber.New(fiber.Config{
 		JSONEncoder:           json.Marshal,
 		JSONDecoder:           json.Unmarshal,
@@ -37,7 +34,11 @@ func InitServer(lifecycle fx.Lifecycle, logger *zerolog.Logger, cfg *config.Conf
 	app.Use(requestid.New())
 	app.Use(recover.New())
 
-	// TODO: register routes
+	// register routes
+	v1Group := app.Group("/api/v1")
+	for _, route := range routes {
+		v1Group.Add(route.Method(), route.Path(), route.Handler())
+	}
 
 	return &server{
 		fiber:     app,
@@ -50,19 +51,19 @@ func InitServer(lifecycle fx.Lifecycle, logger *zerolog.Logger, cfg *config.Conf
 // Start the server.
 func (s *server) Start() {
 	s.lifecycle.Append(fx.Hook{
-		OnStart: func(ctx context.Context) (err error) {
-			go func() {
-				err = s.fiber.Listen(fmt.Sprintf(":%d", s.cfg.Port))
-				if err != nil {
-					return
-				}
-			}()
-			s.logger.Info().Interface("config", s.cfg).Msg("Service started")
-			return
+		OnStart: func(ctx context.Context) error {
+			go s.run()
+			s.logger.Info().Interface("config", s.cfg).Msg("Server started")
+			return nil
 		},
 		OnStop: func(ctx context.Context) error {
 			s.logger.Info().Msg("Shutting down server")
 			return s.fiber.Shutdown()
 		},
 	})
+}
+
+// run the server.
+func (s *server) run() {
+	_ = s.fiber.Listen(fmt.Sprintf(":%d", s.cfg.Port))
 }
