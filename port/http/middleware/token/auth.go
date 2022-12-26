@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+const DefaultContextKey = "user"
+
 type UserFn func(ctx context.Context, token string) (*user.User, error)
 
 type Config struct {
@@ -58,7 +60,7 @@ func makeCfg(config []Config) (cfg Config) {
 		cfg.AuthSchema = "Bearer"
 	}
 	if cfg.ContextKey == "" {
-		cfg.ContextKey = "user"
+		cfg.ContextKey = DefaultContextKey
 	}
 
 	if cfg.ErrorHandler == nil {

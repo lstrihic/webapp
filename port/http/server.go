@@ -41,7 +41,7 @@ func InitServer(
 		DisableStartupMessage: true,
 	})
 	app.Use(requestid.New())
-	app.Use(token.New(auth.Authenticate))
+	app.Use(token.New(auth.Authorize))
 	app.Use(recover.New())
 
 	// register routes

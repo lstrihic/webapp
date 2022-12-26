@@ -12,7 +12,7 @@ import (
 var Provider = fx.Provide(InitAuth)
 
 type Service interface {
-	Authenticate(ctx context.Context, token string) (*user.User, error)
+	Authorize(ctx context.Context, token string) (*user.User, error)
 }
 
 type service struct {
@@ -26,8 +26,8 @@ func InitAuth(db db.DB) Service {
 	}
 }
 
-// Authenticate user by the token.
-func (s *service) Authenticate(ctx context.Context, token string) (*user.User, error) {
+// Authorize user by the token.
+func (s *service) Authorize(ctx context.Context, token string) (*user.User, error) {
 	result, err := s.db.Client().
 		Session.
 		Query().
