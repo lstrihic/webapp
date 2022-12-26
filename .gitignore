@@ -4,3 +4,6 @@
 
 # Local config
 data/config.yaml
+
+# Local db
+data/db.database
