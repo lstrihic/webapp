@@ -39,6 +39,7 @@ func InitServer(
 		JSONEncoder:           json.Marshal,
 		JSONDecoder:           json.Unmarshal,
 		DisableStartupMessage: true,
+		ErrorHandler:          api.ErrorHandler(logger),
 	})
 	app.Use(requestid.New())
 	app.Use(token.New(auth.Authorize))
