@@ -4,15 +4,13 @@ import { Helmet } from 'react-helmet-async';
 
 import { Routing } from './Routing';
 
-function App() {
+export const App = () => {
   return (
     <Router>
-      <Helmet>
+      <Helmet defaultTitle="Web App" titleTemplate="%s - Web App">
         <title>Web App</title>
       </Helmet>
       <Routing />
     </Router>
   );
-}
-
-export default App;
+};
