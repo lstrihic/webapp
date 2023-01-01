@@ -4,7 +4,7 @@ VERSION=$(shell cat ${CURRENT_DIR}/VERSION)
 
 .PHONY: generate_schema
 generate_schema:
-	@go run -mod=mod entgo.io/ent/cmd/ent generate --target "$(CURRENT_DIR)/adapter/db/entity" "$(CURRENT_DIR)/adapter/db/schema"
+	@go run -mod=mod entgo.io/ent/cmd/ent generate --template "$(CURRENT_DIR)/adapter/db/template" --target "$(CURRENT_DIR)/adapter/db/entity" "$(CURRENT_DIR)/adapter/db/schema"
 
 .PHONY: create_schema
 create_schema:

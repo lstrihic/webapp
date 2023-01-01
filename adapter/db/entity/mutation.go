@@ -643,6 +643,7 @@ type UserMutation struct {
 	email           *string
 	username        *string
 	password        *string
+	token_key       *string
 	is_banned       *bool
 	clearedFields   map[string]struct{}
 	sessions        map[int]struct{}
@@ -859,6 +860,55 @@ func (m *UserMutation) ResetPassword() {
 	m.password = nil
 }
 
+// SetTokenKey sets the "token_key" field.
+func (m *UserMutation) SetTokenKey(s string) {
+	m.token_key = &s
+}
+
+// TokenKey returns the value of the "token_key" field in the mutation.
+func (m *UserMutation) TokenKey() (r string, exists bool) {
+	v := m.token_key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTokenKey returns the old "token_key" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldTokenKey(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTokenKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTokenKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTokenKey: %w", err)
+	}
+	return oldValue.TokenKey, nil
+}
+
+// ClearTokenKey clears the value of the "token_key" field.
+func (m *UserMutation) ClearTokenKey() {
+	m.token_key = nil
+	m.clearedFields[user.FieldTokenKey] = struct{}{}
+}
+
+// TokenKeyCleared returns if the "token_key" field was cleared in this mutation.
+func (m *UserMutation) TokenKeyCleared() bool {
+	_, ok := m.clearedFields[user.FieldTokenKey]
+	return ok
+}
+
+// ResetTokenKey resets all changes to the "token_key" field.
+func (m *UserMutation) ResetTokenKey() {
+	m.token_key = nil
+	delete(m.clearedFields, user.FieldTokenKey)
+}
+
 // SetIsBanned sets the "is_banned" field.
 func (m *UserMutation) SetIsBanned(b bool) {
 	m.is_banned = &b
@@ -968,7 +1018,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.email != nil {
 		fields = append(fields, user.FieldEmail)
 	}
@@ -977,6 +1027,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.password != nil {
 		fields = append(fields, user.FieldPassword)
+	}
+	if m.token_key != nil {
+		fields = append(fields, user.FieldTokenKey)
 	}
 	if m.is_banned != nil {
 		fields = append(fields, user.FieldIsBanned)
@@ -995,6 +1048,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Username()
 	case user.FieldPassword:
 		return m.Password()
+	case user.FieldTokenKey:
+		return m.TokenKey()
 	case user.FieldIsBanned:
 		return m.IsBanned()
 	}
@@ -1012,6 +1067,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUsername(ctx)
 	case user.FieldPassword:
 		return m.OldPassword(ctx)
+	case user.FieldTokenKey:
+		return m.OldTokenKey(ctx)
 	case user.FieldIsBanned:
 		return m.OldIsBanned(ctx)
 	}
@@ -1043,6 +1100,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPassword(v)
+		return nil
+	case user.FieldTokenKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTokenKey(v)
 		return nil
 	case user.FieldIsBanned:
 		v, ok := value.(bool)
@@ -1080,7 +1144,11 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *UserMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(user.FieldTokenKey) {
+		fields = append(fields, user.FieldTokenKey)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -1093,6 +1161,11 @@ func (m *UserMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *UserMutation) ClearField(name string) error {
+	switch name {
+	case user.FieldTokenKey:
+		m.ClearTokenKey()
+		return nil
+	}
 	return fmt.Errorf("unknown User nullable field %s", name)
 }
 
@@ -1108,6 +1181,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldPassword:
 		m.ResetPassword()
+		return nil
+	case user.FieldTokenKey:
+		m.ResetTokenKey()
 		return nil
 	case user.FieldIsBanned:
 		m.ResetIsBanned()

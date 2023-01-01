@@ -38,6 +38,20 @@ func (uc *UserCreate) SetPassword(s string) *UserCreate {
 	return uc
 }
 
+// SetTokenKey sets the "token_key" field.
+func (uc *UserCreate) SetTokenKey(s string) *UserCreate {
+	uc.mutation.SetTokenKey(s)
+	return uc
+}
+
+// SetNillableTokenKey sets the "token_key" field if the given value is not nil.
+func (uc *UserCreate) SetNillableTokenKey(s *string) *UserCreate {
+	if s != nil {
+		uc.SetTokenKey(*s)
+	}
+	return uc
+}
+
 // SetIsBanned sets the "is_banned" field.
 func (uc *UserCreate) SetIsBanned(b bool) *UserCreate {
 	uc.mutation.SetIsBanned(b)
@@ -217,6 +231,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
 		_node.Password = value
+	}
+	if value, ok := uc.mutation.TokenKey(); ok {
+		_spec.SetField(user.FieldTokenKey, field.TypeString, value)
+		_node.TokenKey = value
 	}
 	if value, ok := uc.mutation.IsBanned(); ok {
 		_spec.SetField(user.FieldIsBanned, field.TypeBool, value)

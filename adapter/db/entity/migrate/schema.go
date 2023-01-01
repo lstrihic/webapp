@@ -37,6 +37,7 @@ var (
 		{Name: "email", Type: field.TypeString, Unique: true},
 		{Name: "username", Type: field.TypeString, Unique: true},
 		{Name: "password", Type: field.TypeString},
+		{Name: "token_key", Type: field.TypeString, Nullable: true},
 		{Name: "is_banned", Type: field.TypeBool, Default: false},
 	}
 	// UsersTable holds the schema information for the "users" table.

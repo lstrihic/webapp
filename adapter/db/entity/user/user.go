@@ -13,6 +13,8 @@ const (
 	FieldUsername = "username"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
+	// FieldTokenKey holds the string denoting the token_key field in the database.
+	FieldTokenKey = "token_key"
 	// FieldIsBanned holds the string denoting the is_banned field in the database.
 	FieldIsBanned = "is_banned"
 	// EdgeSessions holds the string denoting the sessions edge name in mutations.
@@ -34,6 +36,7 @@ var Columns = []string{
 	FieldEmail,
 	FieldUsername,
 	FieldPassword,
+	FieldTokenKey,
 	FieldIsBanned,
 }
 

@@ -100,6 +100,13 @@ func Password(v string) predicate.User {
 	})
 }
 
+// TokenKey applies equality check predicate on the "token_key" field. It's identical to TokenKeyEQ.
+func TokenKey(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTokenKey), v))
+	})
+}
+
 // IsBanned applies equality check predicate on the "is_banned" field. It's identical to IsBannedEQ.
 func IsBanned(v bool) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -401,6 +408,119 @@ func PasswordEqualFold(v string) predicate.User {
 func PasswordContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldPassword), v))
+	})
+}
+
+// TokenKeyEQ applies the EQ predicate on the "token_key" field.
+func TokenKeyEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyNEQ applies the NEQ predicate on the "token_key" field.
+func TokenKeyNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyIn applies the In predicate on the "token_key" field.
+func TokenKeyIn(vs ...string) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldTokenKey), v...))
+	})
+}
+
+// TokenKeyNotIn applies the NotIn predicate on the "token_key" field.
+func TokenKeyNotIn(vs ...string) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldTokenKey), v...))
+	})
+}
+
+// TokenKeyGT applies the GT predicate on the "token_key" field.
+func TokenKeyGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyGTE applies the GTE predicate on the "token_key" field.
+func TokenKeyGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyLT applies the LT predicate on the "token_key" field.
+func TokenKeyLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyLTE applies the LTE predicate on the "token_key" field.
+func TokenKeyLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyContains applies the Contains predicate on the "token_key" field.
+func TokenKeyContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyHasPrefix applies the HasPrefix predicate on the "token_key" field.
+func TokenKeyHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyHasSuffix applies the HasSuffix predicate on the "token_key" field.
+func TokenKeyHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyIsNil applies the IsNil predicate on the "token_key" field.
+func TokenKeyIsNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldTokenKey)))
+	})
+}
+
+// TokenKeyNotNil applies the NotNil predicate on the "token_key" field.
+func TokenKeyNotNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldTokenKey)))
+	})
+}
+
+// TokenKeyEqualFold applies the EqualFold predicate on the "token_key" field.
+func TokenKeyEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldTokenKey), v))
+	})
+}
+
+// TokenKeyContainsFold applies the ContainsFold predicate on the "token_key" field.
+func TokenKeyContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldTokenKey), v))
 	})
 }
 

@@ -22,6 +22,8 @@ func (User) Fields() []ent.Field {
 			Unique(),
 		field.String("password").
 			NotEmpty(),
+		field.String("token_key").
+			Optional(),
 		field.Bool("is_banned").
 			Default(false),
 	}

@@ -43,7 +43,7 @@ func init() {
 	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
 	// userDescIsBanned is the schema descriptor for is_banned field.
-	userDescIsBanned := userFields[3].Descriptor()
+	userDescIsBanned := userFields[4].Descriptor()
 	// user.DefaultIsBanned holds the default value on creation for the is_banned field.
 	user.DefaultIsBanned = userDescIsBanned.Default.(bool)
 }

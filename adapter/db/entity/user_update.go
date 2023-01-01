@@ -46,6 +46,26 @@ func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
 	return uu
 }
 
+// SetTokenKey sets the "token_key" field.
+func (uu *UserUpdate) SetTokenKey(s string) *UserUpdate {
+	uu.mutation.SetTokenKey(s)
+	return uu
+}
+
+// SetNillableTokenKey sets the "token_key" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableTokenKey(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetTokenKey(*s)
+	}
+	return uu
+}
+
+// ClearTokenKey clears the value of the "token_key" field.
+func (uu *UserUpdate) ClearTokenKey() *UserUpdate {
+	uu.mutation.ClearTokenKey()
+	return uu
+}
+
 // SetIsBanned sets the "is_banned" field.
 func (uu *UserUpdate) SetIsBanned(b bool) *UserUpdate {
 	uu.mutation.SetIsBanned(b)
@@ -208,6 +228,12 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
 	}
+	if value, ok := uu.mutation.TokenKey(); ok {
+		_spec.SetField(user.FieldTokenKey, field.TypeString, value)
+	}
+	if uu.mutation.TokenKeyCleared() {
+		_spec.ClearField(user.FieldTokenKey, field.TypeString)
+	}
 	if value, ok := uu.mutation.IsBanned(); ok {
 		_spec.SetField(user.FieldIsBanned, field.TypeBool, value)
 	}
@@ -299,6 +325,26 @@ func (uuo *UserUpdateOne) SetUsername(s string) *UserUpdateOne {
 // SetPassword sets the "password" field.
 func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
 	uuo.mutation.SetPassword(s)
+	return uuo
+}
+
+// SetTokenKey sets the "token_key" field.
+func (uuo *UserUpdateOne) SetTokenKey(s string) *UserUpdateOne {
+	uuo.mutation.SetTokenKey(s)
+	return uuo
+}
+
+// SetNillableTokenKey sets the "token_key" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableTokenKey(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetTokenKey(*s)
+	}
+	return uuo
+}
+
+// ClearTokenKey clears the value of the "token_key" field.
+func (uuo *UserUpdateOne) ClearTokenKey() *UserUpdateOne {
+	uuo.mutation.ClearTokenKey()
 	return uuo
 }
 
@@ -493,6 +539,12 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.TokenKey(); ok {
+		_spec.SetField(user.FieldTokenKey, field.TypeString, value)
+	}
+	if uuo.mutation.TokenKeyCleared() {
+		_spec.ClearField(user.FieldTokenKey, field.TypeString)
 	}
 	if value, ok := uuo.mutation.IsBanned(); ok {
 		_spec.SetField(user.FieldIsBanned, field.TypeBool, value)

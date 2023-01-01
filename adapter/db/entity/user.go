@@ -21,6 +21,8 @@ type User struct {
 	Username string `json:"username,omitempty"`
 	// Password holds the value of the "password" field.
 	Password string `json:"password,omitempty"`
+	// TokenKey holds the value of the "token_key" field.
+	TokenKey string `json:"token_key,omitempty"`
 	// IsBanned holds the value of the "is_banned" field.
 	IsBanned bool `json:"is_banned,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -55,7 +57,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldEmail, user.FieldUsername, user.FieldPassword:
+		case user.FieldEmail, user.FieldUsername, user.FieldPassword, user.FieldTokenKey:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type User", columns[i])
@@ -95,6 +97,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field password", values[i])
 			} else if value.Valid {
 				u.Password = value.String
+			}
+		case user.FieldTokenKey:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field token_key", values[i])
+			} else if value.Valid {
+				u.TokenKey = value.String
 			}
 		case user.FieldIsBanned:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -143,6 +151,9 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("password=")
 	builder.WriteString(u.Password)
+	builder.WriteString(", ")
+	builder.WriteString("token_key=")
+	builder.WriteString(u.TokenKey)
 	builder.WriteString(", ")
 	builder.WriteString("is_banned=")
 	builder.WriteString(fmt.Sprintf("%v", u.IsBanned))

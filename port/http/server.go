@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/etag"
+	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/lstrihic/webapp/domain/auth"
 	"github.com/lstrihic/webapp/pkg/config"
 	"github.com/lstrihic/webapp/port/http/api"
 	"github.com/lstrihic/webapp/port/http/middleware/token"
+	"github.com/lstrihic/webapp/ui"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )
@@ -41,15 +44,21 @@ func InitServer(
 		DisableStartupMessage: true,
 		ErrorHandler:          api.ErrorHandler(logger),
 	})
+	app.Use(favicon.New())
 	app.Use(requestid.New())
-	app.Use(token.New(auth.Authorize))
-	app.Use(recover.New())
+	app.Use(etag.New())
+	app.Use(recover.New(recover.Config{
+		EnableStackTrace: true,
+	}))
 
 	// register routes
-	v1Group := app.Group("/api/v1")
+	v1Group := app.Group("/api/v1", token.New(auth.Authorize))
 	for _, route := range routes {
 		v1Group.Add(route.Method(), route.Path(), route.Handler())
 	}
+
+	// server UI
+	app.Use("/", ui.Middleware)
 
 	return &server{
 		fiber:     app,
