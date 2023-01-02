@@ -1,10 +1,11 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { Helmet } from 'react-helmet-async';
+import { LayoutComponent } from '@components';
 
 export const HomePage = () => {
   return (
-    <>
+    <LayoutComponent>
       <Helmet title="Home Page" />
       <div className="container">
         <div className="columns">
@@ -28,6 +29,6 @@ export const HomePage = () => {
           <div className="column">Fourth column</div>
         </div>
       </div>
-    </>
+    </LayoutComponent>
   );
 };
