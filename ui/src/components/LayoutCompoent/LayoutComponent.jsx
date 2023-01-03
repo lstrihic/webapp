@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
 import { css, cx } from '@emotion/css';
-import { HiOutlineWrenchScrewdriver } from 'react-icons/hi2';
+import styled from '@emotion/styled';
+import React from 'react';
 import { HiOutlineDatabase } from 'react-icons/hi';
+import { HiOutlineWrenchScrewdriver } from 'react-icons/hi2';
+import { Link } from 'react-router-dom';
 
 const Nav = styled.nav(`
   width: 100%;
@@ -84,6 +84,8 @@ const navIconCss = css`
   line-height: 1;
 `;
 
+const Figure = css``;
+
 export const LayoutComponent = ({ children }) => {
   return (
     <div className={layoutCss}>
@@ -97,6 +99,7 @@ export const LayoutComponent = ({ children }) => {
             <HiOutlineWrenchScrewdriver className={navIconCss} />
           </SidebarLink>
         </Nav>
+        <Figure>Profile</Figure>
       </Aside>
       {children}
     </div>

@@ -1,12 +1,12 @@
+import { Global, css } from '@emotion/react';
+import '@fontsource/roboto';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import 'bulma/css/bulma.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
-import { App } from './App';
 
-import '@fontsource/roboto';
-import 'bulma/css/bulma.css';
-import { css, Global } from '@emotion/react';
+import { App } from './App';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('app')).render(
           display: block;
           width: 100%;
           height: 100vh;
+          background: #f8f9fa;
         }
       `}
     />
