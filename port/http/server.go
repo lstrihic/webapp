@@ -11,7 +11,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/lstrihic/webapp/domain/auth"
 	"github.com/lstrihic/webapp/pkg/config"
+	"github.com/lstrihic/webapp/pkg/localization"
 	"github.com/lstrihic/webapp/port/http/api"
+	localizationMiddleware "github.com/lstrihic/webapp/port/http/middleware/localization"
 	"github.com/lstrihic/webapp/port/http/middleware/token"
 	"github.com/lstrihic/webapp/ui"
 	"github.com/rs/zerolog"
@@ -37,6 +39,7 @@ func InitServer(
 	logger *zerolog.Logger,
 	cfg *config.Config,
 	auth auth.Service,
+	localization localization.Service,
 ) Server {
 	app := fiber.New(fiber.Config{
 		JSONEncoder:           json.Marshal,
@@ -47,14 +50,22 @@ func InitServer(
 	app.Use(favicon.New())
 	app.Use(requestid.New())
 	app.Use(etag.New())
+	app.Use(localizationMiddleware.New(localization.GetBundle()))
 	app.Use(recover.New(recover.Config{
 		EnableStackTrace: true,
 	}))
 
 	// register routes
-	v1Group := app.Group("/api/v1", token.New(auth.Authorize))
+	authMiddleware := token.New(auth.Authorize)
+	v1Group := app.Group("/api/v1")
 	for _, route := range routes {
-		v1Group.Add(route.Method(), route.Path(), route.Handler())
+		var handlers []fiber.Handler
+		if route.IsSecure() {
+			handlers = append(handlers, authMiddleware)
+		}
+		handlers = append(handlers, route.Handler())
+
+		v1Group.Add(route.Method(), route.Path(), handlers...)
 	}
 
 	// server UI

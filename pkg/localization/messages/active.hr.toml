@@ -1,0 +1,5 @@
+# auth
+Auth.InvalidCredentials = "Neispravni podaci za prijavu."
+
+# server
+Server.FormValidationFailed = "Forma nije ispravna."

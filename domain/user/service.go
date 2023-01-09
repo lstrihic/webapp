@@ -32,6 +32,7 @@ func (s *service) CreateUser(ctx context.Context, form *Form) (*User, error) {
 		return nil, err
 	}
 
+	// save user
 	result, err := s.db.Client().
 		User.
 		Create().

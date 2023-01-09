@@ -20,6 +20,10 @@ func (_ *get) Path() string {
 	return "/users/me"
 }
 
+func (_ *get) IsSecure() bool {
+	return true
+}
+
 func (_ *get) Handler() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusOK).JSON(api.GetUser(ctx))

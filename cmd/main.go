@@ -4,6 +4,7 @@ import (
 	"github.com/lstrihic/webapp/adapter/db"
 	"github.com/lstrihic/webapp/domain"
 	"github.com/lstrihic/webapp/pkg/config"
+	"github.com/lstrihic/webapp/pkg/localization"
 	"github.com/lstrihic/webapp/port/http"
 	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
@@ -40,6 +41,7 @@ var rootCMD = cobra.Command{
 			fx.Supply(&logger),
 			fx.Supply(&cfg),
 			db.Provider,
+			localization.Provider,
 			domain.Provider,
 			http.Provider,
 			fx.Invoke(func(db db.DB, server http.Server) error {

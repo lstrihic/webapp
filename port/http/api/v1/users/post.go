@@ -24,6 +24,10 @@ func (_ *post) Path() string {
 	return "/users"
 }
 
+func (_ *post) IsSecure() bool {
+	return true
+}
+
 func (p *post) Handler() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// unmarshal body

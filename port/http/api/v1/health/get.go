@@ -16,7 +16,11 @@ func (_ *get) Method() string {
 }
 
 func (_ *get) Path() string {
-	return "/get"
+	return "/health"
+}
+
+func (_ *get) IsSecure() bool {
+	return false
 }
 
 func (_ *get) Handler() fiber.Handler {
