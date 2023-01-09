@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gofiber/fiber/v2"
 	"github.com/lstrihic/webapp/domain/user"
+	"github.com/lstrihic/webapp/port/http/api/utils"
 	"github.com/pkg/errors"
 	"strings"
 )
@@ -64,12 +65,21 @@ func makeCfg(config []Config) (cfg Config) {
 	}
 
 	if cfg.ErrorHandler == nil {
-		cfg.ErrorHandler = func(c *fiber.Ctx, err error) error {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Error{
+		cfg.ErrorHandler = func(ctx *fiber.Ctx, err error) error {
+			return ctx.Status(fiber.StatusUnauthorized).JSON(utils.Error{
 				Code:    fiber.StatusUnauthorized,
-				Message: "failed to authorize",
+				Message: utils.LocalizeMessage(ctx, "Auth.FailedToAuthorize", "Failed to authorize user."),
 			})
 		}
 	}
 	return cfg
+}
+
+// GetUser get username from request context.
+func GetUser(ctx *fiber.Ctx) *user.User {
+	usr := ctx.Locals(DefaultContextKey)
+	if usr != nil {
+		return usr.(*user.User)
+	}
+	return nil
 }

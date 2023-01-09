@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/lstrihic/webapp/domain/auth"
 	"github.com/lstrihic/webapp/port/http/api"
+	"github.com/lstrihic/webapp/port/http/api/utils"
 	"github.com/rs/zerolog"
 )
 
@@ -34,7 +35,7 @@ func (_ *post) IsSecure() bool {
 func (p *post) Handler() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// logger
-		logger := api.EnrichLogger(ctx, p.logger)
+		logger := utils.EnrichLogger(ctx, p.logger)
 
 		// unmarshal body
 		var form auth.Form
@@ -51,7 +52,11 @@ func (p *post) Handler() fiber.Handler {
 		token, err := p.service.AuthorizeUser(ctx.Context(), &form)
 		if err != nil {
 			logger.Warn().Err(err).Msg("Invalid username or password")
-			return fiber.NewError(fiber.StatusUnauthorized, api.LocalizeMessage(ctx, "Auth.InvalidCredentials", "Invalid user credentials."))
+
+			return &utils.Error{
+				Code:    fiber.StatusUnauthorized,
+				Message: utils.LocalizeMessage(ctx, "Auth.InvalidCredentials", "Invalid user credentials."),
+			}
 		}
 
 		return ctx.Status(fiber.StatusCreated).JSON(token)

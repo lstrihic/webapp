@@ -3,6 +3,7 @@ package me
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/lstrihic/webapp/port/http/api"
+	"github.com/lstrihic/webapp/port/http/middleware/token"
 )
 
 type get struct {
@@ -26,6 +27,6 @@ func (_ *get) IsSecure() bool {
 
 func (_ *get) Handler() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return ctx.Status(fiber.StatusOK).JSON(api.GetUser(ctx))
+		return ctx.Status(fiber.StatusOK).JSON(token.GetUser(ctx))
 	}
 }

@@ -1,5 +1,6 @@
 # auth
 Auth.InvalidCredentials = "Invalid user credentials."
+Auth.FailedToAuthorize = "Failed to authorize user."
 
 # server
 Server.FormValidationFailed = "Validation failed."
