@@ -25,13 +25,13 @@ var ErrorHandler = func(logger *zerolog.Logger) fiber.ErrorHandler {
 		var apiError *utils.Error
 
 		if errors.As(err, &validationErrType) {
-			logger.Warn().Interface("validation_errors", err).Msg("Validation failed")
+			logger.Warn().Interface("validation_errors", err).Msg("Bad request")
 			return ctx.Status(fiber.StatusUnprocessableEntity).JSON(utils.Error{
 				Code:    fiber.StatusUnprocessableEntity,
 				Message: err,
 			})
 		} else if errors.As(err, &fiberError) {
-			logger.Warn().Interface("error", fiberError).Msg("Message occurred")
+			logger.Warn().Interface("error", fiberError).Msg("Error occurred")
 			return ctx.Status(fiberError.Code).JSON(utils.Error{
 				Code:    fiberError.Code,
 				Message: fiberError.Message,
